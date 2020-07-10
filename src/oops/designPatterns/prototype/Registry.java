@@ -11,10 +11,22 @@ import oops.designPatterns.prototype.items.Movie;
 //Singleton
 public class Registry {
 
+	private static volatile Registry instance;
 	private Map<String, Item> items = new HashMap<String, Item>();
 	
-	public Registry() {
+	private Registry() {
 		loadItems();
+	}
+
+	public static Registry getInstance() {
+		if(instance == null) {
+			synchronized (Registry.class) {
+				if(instance == null) {
+					instance = new Registry();
+				}
+			}
+		}
+		return instance;
 	}
 	
 	public Item createItem (String type) {
