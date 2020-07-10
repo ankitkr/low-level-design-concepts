@@ -14,7 +14,8 @@ import oops.SOLID.DependencyInversionPrinciple.before.employees.Employee;
 import oops.SOLID.DependencyInversionPrinciple.before.employees.FullTimeEmployee;
 import oops.SOLID.DependencyInversionPrinciple.before.employees.Intern;
 import oops.SOLID.DependencyInversionPrinciple.before.employees.PartTimeEmployee;
-import oops.SOLID.DependencyInversionPrinciple.before.serielizer.EmployeeFileSerializer;
+import oops.SOLID.DependencyInversionPrinciple.before.serializer.EmployeeFileSerializer;
+import oops.SOLID.DependencyInversionPrinciple.before.serializer.Serializer;
 
 /*
 Helper method to perform CRUD operations on employees. In a production
@@ -22,13 +23,14 @@ application we could use the database for persistence. In this demo,
 we are storing employees in the file system.
  */
 
-public class EmployeeFileRepository {
-    private EmployeeFileSerializer serializer;
+public class EmployeeFileRepository implements Repository<Employee> {
+    private Serializer<Employee> serializer;
 
-    public EmployeeFileRepository(EmployeeFileSerializer serializer) {
+    public EmployeeFileRepository(Serializer<Employee> serializer) {
         this.serializer = serializer;
     }
 
+    @Override
     public List<Employee> findAll() {
      // Employees are kept in memory for simplicity
      		Employee anna = new FullTimeEmployee("Anna Smith", 2000);
@@ -40,6 +42,7 @@ public class EmployeeFileRepository {
      		return Arrays.asList(anna, billy, steve, magda);
     }
 
+    @Override
     public void save(Employee employee) throws IOException {
         String serializedString = this.serializer.serialize(employee);
 
